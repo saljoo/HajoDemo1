@@ -18,5 +18,45 @@ public class App4 {
     {
         // Kopioi edellisen tehtävän ratkaisu tähän lähtökohdaksi
         // Tässä tehtävässä vaaditaan myös muutoksia TaskAllocator-luokkaan
+        // Otetaan funktion aloitusaika talteen suoritusajan laskemista varten
+        long startTime = System.currentTimeMillis();
+
+        // Generoidaan kasa esimerkkitehtäväpalautuksia
+        List<Submission> ungradedSubmissions = SubmissionGenerator.generateSubmissions(21, 200, Strategy.STATIC);
+
+        // Tulostetaan tiedot esimerkkipalautuksista ennen arviointia
+        for (var ug : ungradedSubmissions) {
+            System.out.println(ug);
+        }
+
+        // Luodaan uusi arviointitehtävä
+        List<GradingTask> gt = TaskAllocator.sloppyAllocator(ungradedSubmissions);
+        List<Thread> threads = new ArrayList<>();
+        for(int i = 0; i < gt.size(); i++){
+            Thread thread = new Thread(gt.get(i));
+            threads.add(thread);
+            thread.start();
+        }
+        for(Thread thread : threads){
+            try{
+                thread.join();
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+        }
+
+        List<Submission> gradedSubmissions = new ArrayList<>();
+        for(GradingTask gt1 : gt){
+            gradedSubmissions.addAll(gt1.getGradedSubmissions());
+        }
+
+        // Tulostetaan arvioidut palautukset
+        System.out.println("------------ CUT HERE ------------");
+        for (var gs : gradedSubmissions) {
+            System.out.println(gs);
+        }
+
+        // Lasketaan funktion suoritusaika
+        System.out.printf("Total time for grading: %d ms%n", System.currentTimeMillis()-startTime);
     }
 }

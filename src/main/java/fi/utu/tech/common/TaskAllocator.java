@@ -1,6 +1,7 @@
 package fi.utu.tech.common;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * You need to modify this file
@@ -16,8 +17,14 @@ public class TaskAllocator {
      */
     public static List<GradingTask> sloppyAllocator(List<Submission> submissions) {
         // TODO: Tehtävä 4
-        // Retruns null for now to suppress warnings
-        return null;
+        List<GradingTask> arvioijat = new ArrayList<>();
+        GradingTask gt1 = new GradingTask();
+        GradingTask gt2 = new GradingTask();
+        gt1.setUngradedSubmissions(submissions.subList(0, submissions.size()/2));
+        gt2.setUngradedSubmissions(submissions.subList(submissions.size()/2, submissions.size()));
+        arvioijat.add(gt1);
+        arvioijat.add(gt2);
+        return arvioijat;
     }
 
 
@@ -30,7 +37,21 @@ public class TaskAllocator {
      */
     public static List<GradingTask> allocate(List<Submission> submissions, int taskCount) {
         // TODO: Tehtävä 5
-        // Retruns null for now to suppress warnings
-        return null;
+        List<GradingTask> arvioijat = new ArrayList<>();
+        for(int i = 0; i < taskCount; i++){
+            GradingTask gt = new GradingTask();
+            arvioijat.add(gt);
+        }
+        int j = 0;
+        for(int k = 0; k <= arvioijat.size(); k++){
+            if(j == submissions.size()) break;
+            if(k == arvioijat.size()) k = 0;
+            List<Submission> apuLista = new ArrayList<>();
+            apuLista = arvioijat.get(k).getUngradedSubmissions();
+            apuLista.add(submissions.get(j));
+            arvioijat.get(k).setUngradedSubmissions(apuLista);
+            j++;
+        }
+        return arvioijat;
     }
 }
