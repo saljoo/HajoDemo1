@@ -42,18 +42,19 @@ public class App6{
         // Luodaan uusi arviointitehtävä
         int taskCount = 21;
         Boolean terminated = false;
-        ExecutorService es = Executors.newFixedThreadPool(10);
+        ExecutorService es = Executors.newFixedThreadPool(5);
         List<GradingTask> gt = TaskAllocator.allocate(ungradedSubmissions, taskCount);
-        List<Submission> gradedSubmissions = new ArrayList<>();
+        
         for(GradingTask gt1 : gt){
             es.execute(gt1);
         }
         
+        es.shutdown();
         while(terminated == false){
-            es.shutdown();
             terminated = es.isTerminated();
         }
 
+        List<Submission> gradedSubmissions = new ArrayList<>();
         for(GradingTask gt2 : gt){
             gradedSubmissions.addAll(gt2.getGradedSubmissions());
         }
