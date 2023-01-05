@@ -1,3 +1,5 @@
+School exercise on using threads in Java
+
 # Hajautetut järjestelmät demonstraatiokerta 1
 
 ## Demotehtäväpohjan käyttö
